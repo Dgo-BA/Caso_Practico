@@ -1,0 +1,71 @@
+{
+	"info": {
+		"_postman_id": "28ebdbc3-5aa2-4458-add1-b2c14da0f5b4",
+		"name": "CASO PRACTICO",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17339839",
+		"_collection_link": "https://lively-robot-422829.postman.co/workspace/Probando~07004cea-e976-4b59-99f3-55222cb5039b/collection/17339839-28ebdbc3-5aa2-4458-add1-b2c14da0f5b4?action=share&creator=17339839&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Registro de Usuario",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 1,\r\n  \"username\": \"DiegoBA\",\r\n  \"firstName\": \"Diego\",\r\n  \"lastName\": \"Berrocal Aybar\",\r\n  \"email\": \"diego@gmail.com\",\r\n  \"password\": \"123\",\r\n  \"phone\": \"956222750\",\r\n  \"userStatus\": 0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://petstore.swagger.io/v2/user",
+					"protocol": "https",
+					"host": [
+						"petstore",
+						"swagger",
+						"io"
+					],
+					"path": [
+						"v2",
+						"user"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consulta de Usuario",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://petstore.swagger.io/v2/user/DiegoBA",
+					"protocol": "https",
+					"host": [
+						"petstore",
+						"swagger",
+						"io"
+					],
+					"path": [
+						"v2",
+						"user",
+						"DiegoBA"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	]
+}
