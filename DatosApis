@@ -1,0 +1,26 @@
+const axios = require('axios');
+
+async function getSoldPets() {
+  try {
+    const response = await axios.get('https://petstore.swagger.io/v2/pet/findByStatus?status=sold');
+    const pets = response.data;
+
+    const soldPets = pets.filter(pet => pet.status === 'sold');
+    const soldPetNames = soldPets.map(pet => ({ id: pet.id, name: pet.name }));
+
+    return soldPetNames;
+  } catch (error) {
+    console.error('Error:', error.message);
+    return [];
+  }
+}
+
+// Ejemplo de uso
+getSoldPets()
+  .then(soldPetNames => {
+    console.log('Mascotas vendidas:');
+    soldPetNames.forEach(pet => {
+      console.log(`ID: ${pet.id}, Nombre: ${pet.name}`);
+    });
+  })
+  .catch(err => console.error(err));
