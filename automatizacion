@@ -1,0 +1,87 @@
+import com.sun.org.apache.bcel.internal.generic.RETURN;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import jdk.internal.org.objectweb.asm.commons.TryCatchBlockSorter;
+import jdk.internal.org.objectweb.asm.tree.TryCatchBlockNode;
+import org.apache.commons.io.FileUtils;
+import org.junit.*;
+import org.junit.rules.TestRule;
+import org.junit.rules.TestWatcher;
+import org.junit.runner.Description;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+
+import javax.management.Descriptor;
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+public class GoogleSearch {
+    private WebDriver driver;
+    By searchLocator = By.name("q");
+    By pageAutomatizacion=By.xpath("//a[@href='https://es.wikipedia.org/wiki/Automatizaci%C3%B3n_industrial']");
+    By linkTextLocator=By.linkText("Joseph Marie Jacquard");
+    @Before
+    public void Inicio()
+    {
+        WebDriverManager.chromedriver().setup();
+        driver= new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get("https://www.google.com/");
+    }
+
+    private void clickElement(WebElement element, WebDriver driver){
+        JavascriptExecutor executor = (JavascriptExecutor) driver;
+        executor.executeScript("arguments[0].click();",element);
+    }
+    public String getDate()
+    {
+        DateFormat dateFormat=new SimpleDateFormat("dd-MM-yy");
+        Date date=new Date();
+        return dateFormat.format(date);
+    }
+
+    @Rule
+    public final TestRule watcher = new TestWatcher() {
+        @Override
+        protected void failed(Throwable throwable, Description description) {
+            File screenshotFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            try {
+                FileUtils.copyFile(screenshotFile, new File("Bug_" + description.getMethodName() + getDate() + ".png"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        protected void finished(Description description) {
+            driver.quit();
+        }
+    };
+
+    @Test
+    public void testGoogleSearch() throws InterruptedException {
+        WebElement searchBox=driver.findElement(searchLocator);
+        searchBox.clear();
+        searchBox.sendKeys("automatización");
+        searchBox.submit();
+        //driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        Thread.sleep(1000);
+        driver.findElement(pageAutomatizacion).click();
+        Thread.sleep(1000);
+        WebElement textoP=driver.findElement(By.xpath("//div[@id='mw-content-text']/div[1]/p[8]"));
+        clickElement(textoP,driver);
+        System.out.println(textoP.getText());
+        textoP.click();
+        Thread.sleep(3000);
+        Assert.assertEquals("Provocando el error para la captura",textoP.getText());
+        //Assert.assertEquals("En 1801, la patente de un telar automático utilizando tarjetas perforadas fue dada a Joseph Marie Jacquard, quien revolucionó la Industria textil.",textoP.getText());
+    }
+    /*@After
+    public void cierre(){
+        driver.quit();
+    }*/
+}
